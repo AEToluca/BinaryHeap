@@ -11,13 +11,15 @@ class BinaryHeap:
     def remove_min(self) -> int:
         #raise an exception if the heap is empty
         if self.size() <= 0:
-            raise ("Heap is empty")
-        else:
-            #swap the first and last elements, put last element in a variable,sift down and return the variable
-            self.heap_list[self.size() - 1], self.heap_list[0] = self.heap_list[0], self.heap_list[self.size() - 1]
-            result = self.heap_list.pop()
-            self.sift_down()
-            return result
+            return float('inf')
+        if self.size() == 1:
+            return self.heap_list.pop()
+            
+        min_val = self.heap_list[0]
+        self.heap_list[0] = self.heap_list.pop() #return removed min
+        self.sift_down()
+        return min_val
+
     def sift_up(self):
         #set current to the last index
         current = self.size() - 1
@@ -29,40 +31,45 @@ class BinaryHeap:
                 current = parent
             else:
                 break
+
     def sift_down(self):
-        #return if heap only has 1 or less elements
+        #return if the heap is empty or has only one element
         if self.size() <= 1:
             return
-        last = self.size() - 1
-        #swap first and last items
-        self.heap_list[0], self.heap_list[last] = self.heap_list[last], self.heap_list[0]
-
+            
         current = 0
         while True:
+            #create variables for the current left and right children
             smallest = current
             left = 2 * current + 1
             right = 2 * current + 2
-
-            #compare the left and last index to make sure we don't compare something out of range
-            #compare the smallest node with the left child and swap if necessary
-            if left < last and self.heap_list[left] < self.heap_list[smallest]:
+            
+            #check if left or right child is smaller than the current
+            if left < self.size() and self.heap_list[left] < self.heap_list[smallest]:
                 smallest = left
-
-            if right < last and self.heap_list[right] < self.heap_list[smallest]:
+                
+            #check if right child is smaller than the current
+            if right < self.size() and self.heap_list[right] < self.heap_list[smallest]:
                 smallest = right
-
+                
+            #if the smallest is the current, break
             if smallest == current:
                 break
-
+                
+            #swap the current with the smallest child
             self.heap_list[current], self.heap_list[smallest] = self.heap_list[smallest], self.heap_list[current]
             current = smallest
+
     #return the root node
     def find_min(self) -> int:
+        if self.size() <= 0:
+            return float('inf')
         return self.heap_list[0]
 
-    #reutrn the size of the heap
+    #return the size of the heap
     def size(self) -> int:
         return len(self.heap_list)
+    
 
 
 def  main():
